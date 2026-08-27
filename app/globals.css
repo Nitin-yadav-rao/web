@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dark palette — the default. Ported 1:1 from the design draft. */
+  --bg: #0b0c0e;
+  --bg2: #101216;
+  --bg3: #15181c;
+  --line: rgba(232, 228, 218, 0.13);
+  --line2: rgba(232, 228, 218, 0.26);
+  --fg: #e8e4da;
+  --fg2: rgba(232, 228, 218, 0.6);
+  --fg3: rgba(232, 228, 218, 0.34);
+  --accent: oklch(0.8 0.13 205);
+  --accentSoft: oklch(0.8 0.13 205 / 0.13);
+  --grain: rgba(232, 228, 218, 0.035);
+}
+
+/* Toggled by ThemeToggle via document.documentElement.dataset.theme.
+   No `light` is set on first load, so the dark palette above is always
+   the server-rendered default — zero hydration flash. */
+:root[data-theme="light"] {
+  --bg: #edeae4;
+  --bg2: #e5e1d8;
+  --bg3: #dcd8ce;
+  --line: rgba(18, 20, 24, 0.14);
+  --line2: rgba(18, 20, 24, 0.28);
+  --fg: #121418;
+  --fg2: rgba(18, 20, 24, 0.62);
+  --fg3: rgba(18, 20, 24, 0.4);
+  --accent: oklch(0.52 0.13 240);
+  --accentSoft: oklch(0.52 0.13 240 / 0.1);
+  --grain: rgba(18, 20, 24, 0.035);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-newsreader), Georgia, "Iowan Old Style", serif;
+    -webkit-font-smoothing: antialiased;
+    transition: background 0.45s ease, color 0.45s ease;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--fg);
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Custom ring+dot cursor replaces the system cursor, but only once it's
+     actually running (ThemeToggle/CustomCursor add this class) — never on
+     touch devices or when JS hasn't initialized it. */
+  @media (hover: hover) and (pointer: fine) {
+    html.has-custom-cursor,
+    html.has-custom-cursor a,
+    html.has-custom-cursor button,
+    html.has-custom-cursor input,
+    html.has-custom-cursor textarea {
+      cursor: none;
+    }
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line2) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--line2);
+    border-radius: 9999px;
+  }
+}
+
+@layer utilities {
+  .grain-bg {
+    background-image: linear-gradient(var(--grain) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grain) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .diagonal-fill {
+    background-image: repeating-linear-gradient(135deg, var(--grain) 0 1px, transparent 1px 9px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
