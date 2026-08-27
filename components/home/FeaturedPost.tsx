@@ -37,7 +37,7 @@ export function FeaturedPost() {
           </div>
           <div className="relative min-h-[280px] border-t border-line lg:min-h-[420px] lg:border-l lg:border-t-0">
             <Image
-              src="/image/cb.jpg"
+              src="/cb.jpeg"
               alt="Whiteboard from a shift handover"
               fill
               className="object-cover"
