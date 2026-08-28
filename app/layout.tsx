@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, JetBrains_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
-import { profile } from "@/data/site";
+import { getProfile, navLinks } from "@/lib/content-store";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CustomCursor } from "@/components/layout/CustomCursor";
@@ -31,59 +31,70 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://your-domain.com";
-const title = `${profile.name}.log — Field Notes on Cybersecurity Careers`;
-const description = profile.subheadline;
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: title,
-    template: `%s — ${profile.name}.log`,
-  },
-  description,
-  keywords: [
-    "cybersecurity careers",
-    "SOC analyst",
-    "cybersecurity student",
-    "blue team",
-    "Security+",
-    "career notes",
-    profile.name,
-  ],
-  authors: [{ name: profile.name, url: siteUrl }],
-  creator: profile.name,
-  applicationName: `${profile.name}.log`,
-  robots: { index: true, follow: true },
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    url: siteUrl,
-    siteName: `${profile.name}.log`,
-    title,
+// Content now comes from Vercel Blob storage via the admin panel, so every
+// route renders fresh per-request instead of being cached as static HTML —
+// otherwise an edit in /admin wouldn't show up until the next deploy.
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const profile = await getProfile();
+  const title = `${profile.name}.log — Field Notes on Cybersecurity Careers`;
+  const description = profile.subheadline;
+
+  return {
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: title,
+      template: `%s — ${profile.name}.log`,
+    },
     description,
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: title }],
-    locale: "en_US",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-    images: ["/opengraph-image"],
-  },
-  icons: { icon: "/icon" },
-};
+    keywords: [
+      "cybersecurity careers",
+      "SOC analyst",
+      "cybersecurity student",
+      "blue team",
+      "Security+",
+      "career notes",
+      profile.name,
+    ],
+    authors: [{ name: profile.name, url: siteUrl }],
+    creator: profile.name,
+    applicationName: `${profile.name}.log`,
+    robots: { index: true, follow: true },
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "website",
+      url: siteUrl,
+      siteName: `${profile.name}.log`,
+      title,
+      description,
+      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: title }],
+      locale: "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/opengraph-image"],
+    },
+    icons: { icon: "/icon" },
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#0b0c0e",
   colorScheme: "dark",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const profile = await getProfile();
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Blog",
     name: `${profile.name}.log`,
-    description,
+    description: profile.subheadline,
     url: siteUrl,
     author: { "@type": "Person", name: profile.name, address: profile.location },
   };
@@ -108,9 +119,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollProgress />
         <CustomCursor />
         <SmoothScrollProvider>
-          <Header />
+          <Header profile={profile} navLinks={navLinks} />
           <div id="main">{children}</div>
-          <Footer />
+          <Footer profile={profile} />
         </SmoothScrollProvider>
       </body>
     </html>

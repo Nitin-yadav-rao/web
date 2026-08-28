@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { posts } from "@/data/posts";
+import type { Post } from "@/types";
 
-export function LatestWriting() {
+export function LatestWriting({ posts }: { posts: Post[] }) {
   const latest = posts.slice(0, 5);
   const [hoverIndex, setHoverIndex] = useState(0);
   const preview = latest[hoverIndex] ?? latest[0];

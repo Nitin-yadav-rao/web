@@ -1,9 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
-import { posts } from "@/data/posts";
+import type { Post } from "@/types";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
-export function FeaturedPost() {
+export function FeaturedPost({ posts }: { posts: Post[] }) {
   const featured = posts[0];
   if (!featured) return null;
 
@@ -35,16 +34,11 @@ export function FeaturedPost() {
               Read the piece →
             </Link>
           </div>
-          <div className="relative min-h-[280px] border-t border-line lg:min-h-[420px] lg:border-l lg:border-t-0">
-            <Image
-              src="/cb.jpeg"
-              alt="Whiteboard from a shift handover"
-              fill
-              className="object-cover"
-              priority
-            />
+          <div className="diagonal-fill flex min-h-[280px] items-end border-t border-line p-7 lg:min-h-[420px] lg:border-l lg:border-t-0">
+            <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-fg3">
+              [ hero image — shift-handover whiteboard photo ]
+            </span>
           </div>
-          
         </div>
       </section>
     </RevealOnScroll>

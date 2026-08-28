@@ -1,7 +1,10 @@
 import type { MetadataRoute } from "next";
-import { posts } from "@/data/posts";
+import { getPosts } from "@/lib/content-store";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const posts = await getPosts();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://your-domain.com";
 
   const staticRoutes: MetadataRoute.Sitemap = [

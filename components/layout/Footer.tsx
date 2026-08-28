@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { profile } from "@/data/site";
+import type { SiteProfile } from "@/types";
 
-export function Footer() {
+export function Footer({ profile }: { profile: SiteProfile }) {
   return (
     <footer className="mt-20 border-t border-line">
       <div className="mx-auto flex max-w-content flex-wrap items-center justify-between gap-6 px-6 py-11 sm:px-8">

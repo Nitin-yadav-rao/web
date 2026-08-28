@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { digestIssues } from "@/data/digest";
+import { getDigestIssues } from "@/lib/content-store";
 
 export const metadata: Metadata = { title: "The Digest" };
+export const dynamic = "force-dynamic";
 
-export default function DigestPage() {
+export default async function DigestPage() {
+  const digestIssues = await getDigestIssues();
   return (
     <main className="mx-auto max-w-[1000px] px-6 pb-10 pt-[72px] sm:px-8">
       <div className="mb-6 font-mono text-[10.5px] uppercase tracking-[0.2em] text-fg3">

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { profile } from "@/data/site";
+import { getProfile } from "@/lib/content-store";
 import { ContactForm } from "@/components/about/ContactForm";
 
 export const metadata: Metadata = { title: "About" };
+export const dynamic = "force-dynamic";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const profile = await getProfile();
   return (
     <main className="mx-auto max-w-content px-6 pb-10 pt-[72px] sm:px-8">
       <div className="grid items-start gap-14 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-[72px]">

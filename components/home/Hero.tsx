@@ -1,17 +1,22 @@
-import { profile } from "@/data/site";
-import { posts, topics } from "@/data/posts";
-import { digestIssues } from "@/data/digest";
-import { resources } from "@/data/resources";
+import type { DigestIssue, Post, Resource, SiteProfile } from "@/types";
 import { Button } from "@/components/ui/Button";
 
-const stats = [
-  { label: "In the archive", value: posts.length },
-  { label: "Digest issues", value: digestIssues.length },
-  { label: "Resources", value: resources.length },
-  { label: "Topics", value: topics.length - 1 },
-];
+interface HeroProps {
+  profile: SiteProfile;
+  posts: Post[];
+  digestIssues: DigestIssue[];
+  resources: Resource[];
+  topics: string[];
+}
 
-export function Hero() {
+export function Hero({ profile, posts, digestIssues, resources, topics }: HeroProps) {
+  const stats = [
+    { label: "In the archive", value: posts.length },
+    { label: "Digest issues", value: digestIssues.length },
+    { label: "Resources", value: resources.length },
+    { label: "Topics", value: Math.max(topics.length - 1, 0) },
+  ];
+
   return (
     <section className="relative mx-auto max-w-content px-6 pb-[76px] pt-24 sm:px-8 sm:pt-[96px]">
       <div

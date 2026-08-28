@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { posts, topics } from "@/data/posts";
+import type { Post } from "@/types";
 import { cn } from "@/lib/utils";
 
-export function WritingArchive() {
+export function WritingArchive({ posts, topics }: { posts: Post[]; topics: string[] }) {
   const [filter, setFilter] = useState<string>("All");
 
   const filtered = useMemo(
     () => (filter === "All" ? posts : posts.filter((p) => p.topic === filter)),
-    [filter]
+    [filter, posts]
   );
 
   return (

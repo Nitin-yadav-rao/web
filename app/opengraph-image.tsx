@@ -1,11 +1,13 @@
 import { ImageResponse } from "next/og";
-import { profile } from "@/data/site";
+import { getProfile } from "@/lib/content-store";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = `${profile.name}.log — Field notes on cybersecurity careers`;
+export const dynamic = "force-dynamic";
+export const alt = "Field notes on cybersecurity careers";
 
-export default function OpengraphImage() {
+export default async function OpengraphImage() {
+  const profile = await getProfile();
   return new ImageResponse(
     (
       <div

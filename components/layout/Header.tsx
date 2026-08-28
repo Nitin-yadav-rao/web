@@ -4,11 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { navLinks, profile } from "@/data/site";
+import type { NavLink as NavLinkType, SiteProfile } from "@/types";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { cn } from "@/lib/utils";
 
-export function Header() {
+export function Header({ profile, navLinks }: { profile: SiteProfile; navLinks: NavLinkType[] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 

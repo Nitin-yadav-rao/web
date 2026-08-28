@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { resources } from "@/data/resources";
+import { getResources } from "@/lib/content-store";
 
 export const metadata: Metadata = { title: "Resources for Beginners" };
+export const dynamic = "force-dynamic";
 
-export default function ResourcesPage() {
+export default async function ResourcesPage() {
+  const resources = await getResources();
   return (
     <main className="mx-auto max-w-content px-6 pb-10 pt-[72px] sm:px-8">
       <div className="mb-6 font-mono text-[10.5px] uppercase tracking-[0.2em] text-fg3">Start here</div>

@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { profile } from "@/data/site";
-import { digestIssues } from "@/data/digest";
+import type { DigestIssue, SiteProfile } from "@/types";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
-export function NowAndDigest() {
+export function NowAndDigest({ profile, digestIssues }: { profile: SiteProfile; digestIssues: DigestIssue[] }) {
   const latestIssue = digestIssues[0];
 
   return (

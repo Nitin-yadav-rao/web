@@ -4,6 +4,10 @@ Field notes on cybersecurity careers — a personal writing site built with Next
 (App Router), React 19, TypeScript, Tailwind CSS, and Framer Motion. Ported from your
 design draft, now as a real, deployable multi-page site instead of a static mockup.
 
+**Everything shown on the site — your bio, posts, digest issues, resources — can be
+edited from a password-protected admin panel at `/admin`, with no code editing, no git
+commit, and no redeploy required.** See "Managing content" below.
+
 ## What changed from the design draft
 
 - **Real routing.** Home, Writing (archive), individual articles, Digest, Resources, and
@@ -32,8 +36,10 @@ app/
   digest/page.tsx           Weekly digest issues
   resources/page.tsx        Beginner resource list
   about/page.tsx            Bio, timeline, contact form
+  admin/                    Password-protected content editor (see "Managing content")
   api/contact/route.ts      Contact form handler
   api/subscribe/route.ts    Newsletter signup handler
+  api/admin/                Login/logout + content read-write endpoints for /admin
   layout.tsx                Fonts, metadata, JSON-LD, header/footer/cursor
   globals.css               Design tokens (dark/light theme), keyframes
 
@@ -42,11 +48,16 @@ components/
   home/     Hero, FeaturedPost, LatestWriting, NowAndDigest, NewsletterCta
   writing/  WritingArchive, PostBody (renders article content blocks)
   about/    ContactForm
+  admin/    Admin panel forms and shared UI primitives
   ui/       Button, RevealOnScroll
 
-data/     Typed content — site.ts (profile/now/timeline), posts.ts, digest.ts, resources.ts
-types/    Shared TypeScript interfaces for everything in /data
-lib/      cn() class helper, Zod schemas for both forms
+data/       Fallback content — used to seed the site the first time, and as a
+            safety net if storage isn't connected. Once you save anything in
+            /admin, the live site reads from storage instead of these files.
+types/      Shared TypeScript interfaces for everything in /data
+lib/        content-store.ts (storage read/write), auth.ts (admin sessions),
+            cn() class helper, Zod schemas for the contact/newsletter forms
+middleware.ts  Protects /admin and /api/admin behind the login
 ```
 
 ## Getting started
@@ -61,18 +72,52 @@ npm run dev
 Open http://localhost:3000. Other scripts: `npm run build`, `npm run start`,
 `npm run lint`, `npm run typecheck`.
 
-## Content you'll want to edit
+## Managing content (the `/admin` panel)
 
-Everything rendered comes from `/data` — no content is hardcoded in components.
+Everything the site shows — your bio, the "now" list and timeline, every post (including
+the coming-soon drafts), digest issues, and the resources list — can be edited from
+`/admin` on the live site. Saving there publishes instantly: no code change, no commit,
+no redeploy.
 
-1. **`data/site.ts`** — your real email (currently a placeholder), location, bio
-   paragraphs, "now/currently" facts, timeline
-2. **`data/posts.ts`** — write real `body` blocks for the 7 stub articles as you finish
-   them (paragraph / heading / quote / callout block types — see `types/index.ts`)
-3. **`data/digest.ts`** and **`data/resources.ts`** — add new issues / resources here
-4. A portrait photo: replace the placeholder box in `app/about/page.tsx` with a real
+### One-time setup (do this once, on Vercel)
+
+1. **Connect storage.** In your Vercel project: **Storage** tab → **Create Database** →
+   choose **Blob** → set access to **Private** → connect it to this project. Vercel adds
+   the credentials automatically — you don't need to copy/paste anything.
+2. **Set a password.** Project **Settings** → **Environment Variables** → add
+   `ADMIN_PASSWORD` with whatever password you want to use, for all environments →
+   **Save**.
+3. **Redeploy** (Deployments tab → "..." on the latest deployment → Redeploy), so the
+   new environment variable takes effect.
+4. Visit `https://your-site.vercel.app/admin`, log in with the password from step 2, and
+   start editing.
+
+That's it — steps 1–3 only need to happen once. After that, every save in `/admin` goes
+live within seconds.
+
+### What lives where in the admin panel
+
+- **Profile & about** — name, email, location, hero text, the "now" list, the about-page
+  bio paragraphs, and your career timeline
+- **Posts** — add, edit, or delete any post. Untick "publish full body" to show a
+  "coming soon" page for a post instead of writing it yet; article bodies are built from
+  simple blocks (paragraph, heading, quote, callout) with reorder/remove controls
+- **Digest** — weekly digest issues and their items
+- **Resources** — the beginner resource list
+
+### If you'd rather edit code directly
+
+The `/data/*.ts` files still exist and work exactly as before — they're the fallback the
+site uses before you've connected storage (or before you've saved anything for a given
+section in `/admin`). Editing them and pushing to GitHub still works, but once you save
+something in `/admin`, that section's live content comes from storage, not from these
+files, until you overwrite it again from the admin panel.
+
+### Remaining placeholders
+
+1. A portrait photo: replace the placeholder box in `app/about/page.tsx` with a real
    `next/image`
-5. The featured-post and article hero images are still placeholder "[ photo ]" boxes in
+2. The featured-post and article hero images are still placeholder "[ photo ]" boxes in
    `components/home/FeaturedPost.tsx` and `app/writing/[slug]/page.tsx` — swap for real
    images when you have them
 
