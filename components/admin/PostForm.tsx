@@ -6,6 +6,7 @@ import type { Post, PostBlock } from "@/types";
 import { getJson, putJson, slugify } from "@/lib/admin-client";
 import { AdminButton, Field, Input, Panel, StatusMessage, Textarea } from "@/components/admin/ui";
 import { PostBlockEditor } from "@/components/admin/PostBlockEditor";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 const emptyPost: Post = {
   slug: "",
@@ -131,6 +132,12 @@ export function PostForm({ mode, initialPost, existingTopics }: { mode: "new" | 
         <Field label="Blurb" hint="The one- or two-line summary shown on the home page and archive">
           <Textarea rows={2} value={post.blurb} onChange={(e) => update("blurb", e.target.value)} />
         </Field>
+        <ImageUpload
+          label="Cover image"
+          hint="Shown at the top of this post. If this is your newest post, it also appears as the homepage feature image. JPG, PNG, WEBP, GIF, or AVIF, up to 5MB."
+          value={post.coverImageUrl}
+          onChange={(url) => update("coverImageUrl", url)}
+        />
       </Panel>
 
       <Panel className="grid gap-4">

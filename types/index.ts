@@ -30,6 +30,8 @@ export interface SiteProfile {
   aboutHeadline: string;
   aboutParagraphs: string[];
   timeline: TimelineItem[];
+  /** Portrait shown on the About page. Uploaded from /admin; a placeholder shows until one is set. */
+  portraitUrl?: string;
 }
 
 export type PostBlock =
@@ -48,6 +50,8 @@ export interface Post {
   /** Present only for fully-written pieces; absent posts render a "coming soon" state. */
   body?: PostBlock[];
   dek?: string;
+  /** Header image, shown on the post page and (for the newest post) as the homepage feature image. */
+  coverImageUrl?: string;
 }
 
 export interface DigestItem {

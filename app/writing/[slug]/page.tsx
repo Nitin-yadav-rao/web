@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getPosts } from "@/lib/content-store";
 import { PostBody } from "@/components/writing/PostBody";
@@ -50,11 +51,24 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <>
             <p className="mt-7 text-pretty text-xl italic leading-[1.6] text-fg2">{post.blurb}</p>
             <div className="my-10 h-px bg-line2" />
-            <div className="diagonal-fill mb-11 flex h-[300px] items-end border border-line p-[18px]">
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-fg3">
-                [ photo — shift handover whiteboard ]
-              </span>
-            </div>
+            {post.coverImageUrl ? (
+              <div className="relative mb-11 h-[300px] overflow-hidden border border-line">
+                <Image
+                  src={post.coverImageUrl}
+                  alt={post.title}
+                  fill
+                  sizes="760px"
+                  className="object-cover"
+                  unoptimized
+                />
+              </div>
+            ) : (
+              <div className="diagonal-fill mb-11 flex h-[300px] items-end border border-line p-[18px]">
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-fg3">
+                  [ photo — shift handover whiteboard ]
+                </span>
+              </div>
+            )}
 
             <PostBody blocks={post.body} />
 

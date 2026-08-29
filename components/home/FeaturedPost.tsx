@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Post } from "@/types";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
@@ -34,11 +35,24 @@ export function FeaturedPost({ posts }: { posts: Post[] }) {
               Read the piece →
             </Link>
           </div>
-          <div className="diagonal-fill flex min-h-[280px] items-end border-t border-line p-7 lg:min-h-[420px] lg:border-l lg:border-t-0">
-            <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-fg3">
-              [ hero image — shift-handover whiteboard photo ]
-            </span>
-          </div>
+          {featured.coverImageUrl ? (
+            <div className="relative min-h-[280px] border-t border-line lg:min-h-[420px] lg:border-l lg:border-t-0">
+              <Image
+                src={featured.coverImageUrl}
+                alt={featured.title}
+                fill
+                sizes="(min-width: 1024px) 45vw, 100vw"
+                className="object-cover"
+                unoptimized
+              />
+            </div>
+          ) : (
+            <div className="diagonal-fill flex min-h-[280px] items-end border-t border-line p-7 lg:min-h-[420px] lg:border-l lg:border-t-0">
+              <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-fg3">
+                [ hero image — shift-handover whiteboard photo ]
+              </span>
+            </div>
+          )}
         </div>
       </section>
     </RevealOnScroll>

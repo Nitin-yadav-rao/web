@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { NowItem, SiteProfile, TimelineItem } from "@/types";
 import { getJson, putJson } from "@/lib/admin-client";
 import { AdminButton, ArrayRow, Field, Input, Panel, StatusMessage, Textarea } from "@/components/admin/ui";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 
 type Status = "loading" | "idle" | "saving" | "saved" | "error";
 
@@ -83,6 +84,12 @@ export default function AdminProfilePage() {
 
       <Panel className="grid gap-5">
         <div className="font-mono text-[11px] uppercase tracking-[0.16em] text-fg">Identity</div>
+        <ImageUpload
+          label="Portrait photo"
+          hint="Shown on the About page. JPG, PNG, WEBP, GIF, or AVIF, up to 5MB."
+          value={profile.portraitUrl}
+          onChange={(url) => update("portraitUrl", url)}
+        />
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Name">
             <Input value={profile.name} onChange={(e) => update("name", e.target.value)} />

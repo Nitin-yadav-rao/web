@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { getProfile } from "@/lib/content-store";
 import { ContactForm } from "@/components/about/ContactForm";
 
@@ -41,11 +42,24 @@ export default async function AboutPage() {
         </div>
 
         <div className="grid gap-6 lg:sticky lg:top-24">
-          <div className="diagonal-fill flex h-[260px] items-end border border-line p-4">
-            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-fg3">
-              [ portrait photo ]
-            </span>
-          </div>
+          {profile.portraitUrl ? (
+            <div className="relative h-[260px] overflow-hidden border border-line">
+              <Image
+                src={profile.portraitUrl}
+                alt={profile.name}
+                fill
+                sizes="420px"
+                className="object-cover"
+                unoptimized
+              />
+            </div>
+          ) : (
+            <div className="diagonal-fill flex h-[260px] items-end border border-line p-4">
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-fg3">
+                [ portrait photo ]
+              </span>
+            </div>
+          )}
           <ContactForm />
         </div>
       </div>

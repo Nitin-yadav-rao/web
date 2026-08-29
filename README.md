@@ -98,12 +98,20 @@ live within seconds.
 ### What lives where in the admin panel
 
 - **Profile & about** — name, email, location, hero text, the "now" list, the about-page
-  bio paragraphs, and your career timeline
+  bio paragraphs, your career timeline, and your portrait photo (top of the panel — click
+  "Upload photo")
 - **Posts** — add, edit, or delete any post. Untick "publish full body" to show a
   "coming soon" page for a post instead of writing it yet; article bodies are built from
-  simple blocks (paragraph, heading, quote, callout) with reorder/remove controls
+  simple blocks (paragraph, heading, quote, callout) with reorder/remove controls; each
+  post also has a "Cover image" upload, shown at the top of the post (and, for your newest
+  post, on the home page too)
 - **Digest** — weekly digest issues and their items
 - **Resources** — the beginner resource list
+
+Photo uploads go through `/api/admin/upload` to the same Blob store as everything else
+(as public files, so visitors' browsers can load them directly) — no extra setup beyond
+the one-time storage connection above. JPG, PNG, WEBP, GIF, or AVIF, up to 5MB. Until you
+upload one, the site shows a placeholder box in that spot.
 
 ### If you'd rather edit code directly
 
@@ -112,14 +120,6 @@ site uses before you've connected storage (or before you've saved anything for a
 section in `/admin`). Editing them and pushing to GitHub still works, but once you save
 something in `/admin`, that section's live content comes from storage, not from these
 files, until you overwrite it again from the admin panel.
-
-### Remaining placeholders
-
-1. A portrait photo: replace the placeholder box in `app/about/page.tsx` with a real
-   `next/image`
-2. The featured-post and article hero images are still placeholder "[ photo ]" boxes in
-   `components/home/FeaturedPost.tsx` and `app/writing/[slug]/page.tsx` — swap for real
-   images when you have them
 
 ## Wiring up the forms
 

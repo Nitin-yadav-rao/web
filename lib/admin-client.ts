@@ -25,6 +25,15 @@ export async function putJson<T>(url: string, body: unknown): Promise<T> {
   return parseResponse(res) as Promise<T>;
 }
 
+/** Uploads a single image file to Blob storage and returns its public URL. */
+export async function uploadImage(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
+  const data = (await parseResponse(res)) as { url: string };
+  return data.url;
+}
+
 export function slugify(input: string): string {
   return input
     .toLowerCase()
