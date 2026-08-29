@@ -71,11 +71,16 @@ export async function POST(request: Request) {
 
   try {
     const pathname = `uploads/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${extensionFor(file.type)}`;
-    const blob = await put(pathname, file, {
-      access: "public",
+    // The Blob store this project connects to was created as Private, and a
+    // private store only accepts private-access uploads (a public upload is
+    // rejected). So the file is stored privately, same as everything else,
+    // and served back to visitors through /api/media, which streams it
+    // without requiring an admin session.
+    await put(pathname, file, {
+      access: "private",
       contentType: file.type,
     });
-    return NextResponse.json({ url: blob.url });
+    return NextResponse.json({ url: `/api/media/${pathname}` });
   } catch (error) {
     console.error("upload: failed to store image", error);
     return NextResponse.json({ error: "Upload failed. Please try again." }, { status: 500 });
