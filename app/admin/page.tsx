@@ -1,14 +1,15 @@
 import Link from "next/link";
-import { getDigestIssues, getPosts, getProfile, getResources } from "@/lib/content-store";
+import { getDigestIssues, getPosts, getProfile, getResources, getSubscribers } from "@/lib/content-store";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const [profile, posts, digestIssues, resources] = await Promise.all([
+  const [profile, posts, digestIssues, resources, subscribers] = await Promise.all([
     getProfile(),
     getPosts(),
     getDigestIssues(),
     getResources(),
+    getSubscribers(),
   ]);
 
   const cards = [
@@ -35,6 +36,12 @@ export default async function AdminDashboard() {
       title: "Resources",
       desc: "The beginner resource list on /resources.",
       meta: `${resources.length} resource${resources.length === 1 ? "" : "s"}`,
+    },
+    {
+      href: "/admin/subscribers",
+      title: "Subscribers",
+      desc: "Everyone who's signed up on the home page — each gets a welcome email automatically.",
+      meta: `${subscribers.length} subscriber${subscribers.length === 1 ? "" : "s"}`,
     },
   ];
 

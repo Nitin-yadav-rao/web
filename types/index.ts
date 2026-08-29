@@ -73,6 +73,11 @@ export interface Resource {
   meta: string;
 }
 
+export interface Subscriber {
+  email: string;
+  subscribedAt: string;
+}
+
 export interface ContactFormValues {
   name: string;
   email: string;

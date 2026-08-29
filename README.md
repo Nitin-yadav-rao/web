@@ -107,6 +107,8 @@ live within seconds.
   post, on the home page too)
 - **Digest** — weekly digest issues and their items
 - **Resources** — the beginner resource list
+- **Subscribers** — everyone who's signed up on the home page; copy the list to send a
+  weekly issue, or remove an entry
 
 Photo uploads go through `/api/admin/upload` to the same Blob store as everything else
 (as public files, so visitors' browsers can load them directly) — no extra setup beyond
@@ -130,10 +132,14 @@ input and log submissions to the server console, so you can test the full flow l
 a sending domain, then set `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, and `CONTACT_FROM_EMAIL`
 (see `.env.example`).
 
-**Newsletter signup** (`/api/subscribe`): point `NEWSLETTER_PROVIDER_URL` and
-`NEWSLETTER_PROVIDER_KEY` at your provider's API (Buttondown, ConvertKit, beehiiv,
-Mailchimp, ...). The route just does a `fetch` — swap the body shape in
-`app/api/subscribe/route.ts` for whatever your provider expects.
+**Newsletter signup** (`/api/subscribe`): uses the same `RESEND_API_KEY` and
+`CONTACT_FROM_EMAIL` as the contact form above — nothing extra to set up. Each signup is
+recorded in storage (view, copy, or remove entries at `/admin/subscribers`) and gets a
+one-time welcome email. There's no automatic weekly send: when you're ready to send an
+issue, copy the list from `/admin/subscribers` and paste it into Resend's dashboard or
+your email client's BCC field. If you'd rather use a dedicated newsletter provider
+(Buttondown, ConvertKit, beehiiv, Mailchimp, ...) instead, swap the `fetch` call in
+`app/api/subscribe/route.ts` for their API.
 
 ## Deployment (Vercel)
 

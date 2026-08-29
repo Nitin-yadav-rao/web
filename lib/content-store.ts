@@ -1,5 +1,5 @@
 import { get, put } from "@vercel/blob";
-import type { DigestIssue, NavLink, Post, Resource, SiteProfile } from "@/types";
+import type { DigestIssue, NavLink, Post, Resource, SiteProfile, Subscriber } from "@/types";
 import { navLinks as defaultNavLinks, profile as defaultProfile } from "@/data/site";
 import { posts as defaultPosts } from "@/data/posts";
 import { digestIssues as defaultDigestIssues } from "@/data/digest";
@@ -21,6 +21,7 @@ const PATHS = {
   posts: "content/posts.json",
   digest: "content/digest.json",
   resources: "content/resources.json",
+  subscribers: "content/subscribers.json",
 } as const;
 
 function blobConfigured(): boolean {
@@ -86,6 +87,30 @@ export async function getResources(): Promise<Resource[]> {
 
 export async function saveResources(data: Resource[]): Promise<void> {
   await writeJson(PATHS.resources, data);
+}
+
+export async function getSubscribers(): Promise<Subscriber[]> {
+  return readJson(PATHS.subscribers, []);
+}
+
+export async function saveSubscribers(data: Subscriber[]): Promise<void> {
+  await writeJson(PATHS.subscribers, data);
+}
+
+/**
+ * Adds an email to the subscriber list unless it's already there
+ * (case-insensitive). Returns whether it was newly added, so the caller
+ * (the /api/subscribe route) knows whether to send a welcome email.
+ */
+export async function addSubscriber(email: string): Promise<{ added: boolean }> {
+  const list = await getSubscribers();
+  const normalized = email.trim().toLowerCase();
+  if (list.some((s) => s.email.toLowerCase() === normalized)) {
+    return { added: false };
+  }
+  const next = [...list, { email: email.trim(), subscribedAt: new Date().toISOString() }];
+  await saveSubscribers(next);
+  return { added: true };
 }
 
 /** Topics are derived from whatever posts actually exist, so a new topic typed into the admin panel shows up in the archive filter without any extra step. */
