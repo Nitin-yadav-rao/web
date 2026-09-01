@@ -39,6 +39,7 @@ app/
   admin/                    Password-protected content editor (see "Managing content")
   api/contact/route.ts      Contact form handler
   api/subscribe/route.ts    Newsletter signup handler
+  api/chat/route.ts         Chat assistant (Claude API + web search)
   api/admin/                Login/logout + content read-write endpoints for /admin
   layout.tsx                Fonts, metadata, JSON-LD, header/footer/cursor
   globals.css               Design tokens (dark/light theme), keyframes
@@ -140,6 +141,29 @@ issue, copy the list from `/admin/subscribers` and paste it into Resend's dashbo
 your email client's BCC field. If you'd rather use a dedicated newsletter provider
 (Buttondown, ConvertKit, beehiiv, Mailchimp, ...) instead, swap the `fetch` call in
 `app/api/subscribe/route.ts` for their API.
+
+## Chat assistant
+
+A floating "Ask" bubble (bottom-right, on every page except `/admin`) lets visitors ask
+about cybersecurity careers, certs, the job market, or you and your posts — it's given
+your bio, timeline, and the title/topic/blurb of every post and digest issue as context.
+Powered by [Groq](https://groq.com) (`app/api/chat/route.ts`), running
+`groq/compound-mini` — a model with built-in web search that it uses on its own
+judgment for anything time-sensitive, capped by Groq to one search per reply.
+
+**Setup:** get a free key at [console.groq.com/keys](https://console.groq.com/keys), set
+`GROQ_API_KEY` in Vercel, and redeploy.
+
+**The free tier's limit, and what happens at it:** Groq's free tier caps this API key at
+250 requests a day (shared across every visitor, not per person) and 30 a minute — see
+[console.groq.com/docs/rate-limits](https://console.groq.com/docs/rate-limits) for the
+current numbers. `app/api/chat/route.ts` stops a little short of that on its own (at 200
+messages in a day) so visitors get a friendly "check back tomorrow" instead of a raw
+error once it's close to used up, and also caps each visitor to 20 messages an hour so
+one person can't eat the whole day's quota. Both counters are in-memory, not a database
+— they reset whenever the function goes cold, so they're a deterrent and a friendlier
+failure mode, not a hard guarantee. If the site outgrows the free tier, upgrade the plan
+at console.groq.com rather than raising these numbers.
 
 ## Deployment (Vercel)
 

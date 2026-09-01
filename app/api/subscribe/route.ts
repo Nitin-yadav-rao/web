@@ -46,7 +46,7 @@ export async function POST(request: Request) {
   }
 
   const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.CONTACT_FROM_EMAIL ?? "notes@resend.dev";
+  const fromEmail = process.env.CONTACT_FROM_EMAIL ?? "onboarding@resend.dev";
 
   if (!apiKey) {
     console.info("[subscribe] (no RESEND_API_KEY set) new signup recorded:", email);

@@ -11,3 +11,16 @@ export const subscribeSchema = z.object({
   email: z.string().trim().email("Enter a valid email address."),
 });
 export type SubscribeInput = z.infer<typeof subscribeSchema>;
+
+export const chatRequestSchema = z.object({
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string().trim().min(1).max(2000),
+      })
+    )
+    .min(1)
+    .max(30),
+});
+export type ChatRequestInput = z.infer<typeof chatRequestSchema>;

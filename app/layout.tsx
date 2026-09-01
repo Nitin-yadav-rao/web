@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { CustomCursor } from "@/components/layout/CustomCursor";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { SmoothScrollProvider } from "@/components/layout/SmoothScrollProvider";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 
 const newsreader = Newsreader({
   subsets: ["latin"],
@@ -122,6 +123,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Header profile={profile} navLinks={navLinks} />
           <div id="main">{children}</div>
           <Footer profile={profile} />
+          <ChatWidget />
         </SmoothScrollProvider>
       </body>
     </html>

@@ -29,7 +29,7 @@ export async function POST(request: Request) {
   const { name, email, message } = parsed.data;
   const apiKey = process.env.RESEND_API_KEY;
   const toEmail = process.env.CONTACT_TO_EMAIL;
-  const fromEmail = process.env.CONTACT_FROM_EMAIL ?? "notes@resend.dev";
+  const fromEmail = process.env.CONTACT_FROM_EMAIL ?? "onboarding@resend.dev";
 
   if (!apiKey || !toEmail) {
     console.info("[contact] (no RESEND_API_KEY set) submission received:", { name, email, message });
